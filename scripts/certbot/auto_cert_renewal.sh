@@ -6,7 +6,8 @@ set -e
 
 DOMAIN="file.qinsuda.xyz"
 LOG_FILE="/var/log/nginx/cert_renewal.log"
-SCRIPT_DIR="/etc/nginx"
+# 安装后的脚本目录（保持与安装脚本一致）
+SCRIPT_DIR="/etc/nginx/cert-automation"
 
 # 日志函数
 log() {
@@ -47,7 +48,7 @@ get_certificate() {
         certbot certonly --webroot \
             -w /usr/share/nginx/html \
             -d "$DOMAIN" \
-            --email  \
+            --email 1306750238@qq.com \
             --agree-tos \
             --non-interactive
     else
@@ -93,6 +94,12 @@ enable_https() {
 upload_to_qiniu() {
     log "开始上传证书到七牛云..."
     
+    # 加载七牛云环境变量（若存在）
+    if [ -f "$SCRIPT_DIR/qiniu_env.sh" ]; then
+        # shellcheck disable=SC1091
+        source "$SCRIPT_DIR/qiniu_env.sh"
+    fi
+
     # 检查环境变量
     if [ -z "$QINIU_ACCESS_KEY" ] || [ -z "$QINIU_SECRET_KEY" ]; then
         log "错误：未设置七牛云环境变量 QINIU_ACCESS_KEY 和 QINIU_SECRET_KEY"

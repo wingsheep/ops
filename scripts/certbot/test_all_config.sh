@@ -24,22 +24,20 @@ fi
 
 # 检查阿里云DNS配置
 echo ""
-echo "🌐 阿里云DNS配置检查"
+echo "🌐 阿里云 CLI 检查"
 echo "=================="
 
-if [ -f "aliyun-credentials.ini" ]; then
-    echo "✅ 阿里云DNS配置文件存在"
-    ACCESS_KEY=$(grep "dns_aliyun_access_key" aliyun-credentials.ini | cut -d= -f2 | tr -d ' ')
-    SECRET_KEY=$(grep "dns_aliyun_access_key_secret" aliyun-credentials.ini | cut -d= -f2 | tr -d ' ')
-    
-    if [ -n "$ACCESS_KEY" ] && [ -n "$SECRET_KEY" ]; then
-        echo "   ACCESS_KEY: ${ACCESS_KEY:0:10}...${ACCESS_KEY: -4}"
-        echo "   SECRET_KEY: ${SECRET_KEY:0:10}...${SECRET_KEY: -2}"
+if command -v aliyun >/dev/null 2>&1; then
+    echo "✅ 已安装 aliyun CLI: $(aliyun version 2>/dev/null)"
+    echo "   Profiles: $(aliyun configure list 2>/dev/null | tr '\n' ' ')"
+    if aliyun --profile certbot configure get >/dev/null 2>&1; then
+        echo "✅ 存在 profile: certbot"
     else
-        echo "❌ 阿里云DNS密钥格式错误"
+        echo "❌ 未检测到 profile: certbot，请执行："
+        echo "   aliyun configure set --profile certbot --access-key-id <AK> --access-key-secret <SK> --region cn-hangzhou --language zh"
     fi
 else
-    echo "❌ 阿里云DNS配置文件不存在"
+    echo "❌ 未安装 aliyun CLI"
 fi
 
 # 检查域名解析

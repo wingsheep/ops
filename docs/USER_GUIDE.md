@@ -1,4 +1,4 @@
-# 自动化Let's Encrypt证书管理系统
+# 用户指南与系统说明（User Guide）
 
 本系统解决了Let's Encrypt证书3个月过期的问题，实现自动续期并上传到七牛云CDN。
 
@@ -10,25 +10,44 @@
 4. **完整日志记录**：详细的操作日志便于排查问题
 5. **错误处理和回滚**：出错时自动回滚配置
 
-## 文件说明
+## 文件说明（安装目录：/etc/nginx/cert-automation）
 
-- `nginx.conf` - nginx配置文件，已配置file.qinsuda.xyz域名
-- `upload_cert_to_qiniu.py` - 核心Python脚本，处理证书上传到七牛云
-- `auto_cert_renewal.sh` - 自动化bash脚本，统一管理整个流程
-- `requirements.txt` - Python依赖包
-- `qiniu_env.example` - 环境变量配置示例
+- `upload_cert_to_qiniu.py` - 核心 Python 脚本，处理证书上传到七牛云
+- `auto_cert_renewal.sh` - 自动化 bash 脚本（HTTP 验证续期）
+- `dns_cert_renewal.sh` - DNS 验证证书获取/续期脚本（手动 hooks + Aliyun CLI）
+- `dns_auth_hook.sh` / `dns_cleanup_hook.sh` - Certbot 手动 DNS 验证 Hooks（依赖 Aliyun CLI）
+- `requirements.txt` - Python 依赖
+- `qiniu_env.example` - 七牛环境变量示例
 
 ## 安装步骤
 
 ### 1. 安装依赖
 
+推荐：使用仓库安装脚本（自动安装依赖并部署到系统目录）
 ```bash
-# 安装Python依赖
+sudo bash scripts/install.sh   # 在仓库根目录执行
+```
+
+如需手动：
+```bash
+# 在安装目录内安装 Python 依赖
 pip3 install -r requirements.txt
 
-# 确保certbot已安装
+# 确保 certbot 已安装
 # CentOS/RHEL: yum install certbot
 # Ubuntu/Debian: apt install certbot
+```
+
+并安装用于 DNS 手动验证的依赖（Aliyun CLI + jq + dig）：
+```bash
+# yum 系统
+sudo yum install -y jq bind-utils
+curl -sS https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz | tar -xz
+sudo mv aliyun /usr/local/bin/
+aliyun version
+
+# 以 root 配置 aliyun profile（默认使用 profile=certbot）
+sudo aliyun configure set --profile certbot --access-key-id <AK> --access-key-secret <SK> --region cn-hangzhou --language zh
 ```
 
 ### 2. 配置七牛云密钥
@@ -63,7 +82,7 @@ echo 'export QINIU_SECRET_KEY="your_secret"' >> /etc/environment
 crontab -e
 
 # 添加以下行（每月1号凌晨2点执行）
-0 2 1 * * cd /etc/nginx && source qiniu_env.sh && ./auto_cert_renewal.sh
+0 2 1 * * cd /etc/nginx/cert-automation && source qiniu_env.sh && ./auto_cert_renewal.sh
 ```
 
 ## 七牛云API配置
@@ -183,9 +202,8 @@ certbot renew --dry-run
 ## 技术架构
 
 ### nginx配置
-- HTTP服务器：处理Let's Encrypt验证请求
-- HTTPS服务器：证书获取后自动启用
-- 负载均衡：支持多后端服务器
+- HTTP 服务器：处理 Let's Encrypt 验证请求
+- HTTPS 服务器：证书获取后自动启用
 
 ### Python脚本
 - 使用七牛云官方API进行证书管理
