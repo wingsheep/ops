@@ -104,6 +104,9 @@ certbot certificates
 # 预演续期（不改动实际证书）
 certbot renew --dry-run
 
+# 手动执行 (真替换并上传证书)
+certbot renew --force-renewal -v
+
 # 检查指定域名证书到期时间
 DOMAIN=file.qinsuda.xyz
 openssl x509 -in /etc/letsencrypt/live/$DOMAIN/fullchain.pem -noout -dates
@@ -125,6 +128,14 @@ aliyun --profile certbot alidns DescribeDomains --PageSize 1
 
 # 检查 DNS TXT 是否生效
 dig +short TXT _acme-challenge.$DOMAIN
+
+# 查看定时任务
+crontab -l
+# Certbot DNS验证自动续期 - 每月1号凌晨2点检查
+0 2 1 * * certbot renew --preferred-challenges=dns --quiet
+
+# 备用方案 - 每3个月强制使用DNS验证检查
+0 3 1 */3 * certbot renew --preferred-challenges=dns --force-renewal
 ```
 
 ## 说明
