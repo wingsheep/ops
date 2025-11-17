@@ -21,9 +21,9 @@ if [ "${CERTBOT_TEST_CERT:-false}" = "true" ]; then
     exit 0
 fi
 
-# 检查是否是file.qinsuda.xyz域名
-if [[ "$RENEWED_DOMAINS" == *"file.qinsuda.xyz"* ]]; then
-    log "检测到file.qinsuda.xyz证书续期，开始上传到七牛云..."
+# 检查是否是file.example.com域名
+if [[ "$RENEWED_DOMAINS" == *"file.example.com"* ]]; then
+    log "检测到file.example.com证书续期，开始上传到七牛云..."
     
     # 加载环境变量
     if [ -f "$SCRIPT_DIR/qiniu_env.sh" ]; then
@@ -43,7 +43,7 @@ if [[ "$RENEWED_DOMAINS" == *"file.qinsuda.xyz"* ]]; then
     # 启用HTTPS配置（如果还未启用）
     if [ ! -f "/etc/nginx/.https_enabled" ]; then
         log "启用HTTPS配置..."
-        sed -i '/# HTTPS server for file.qinsuda.xyz/{n;:a;/# }/!{s/^    # /    /;n;ba}}' /etc/nginx/nginx.conf
+        sed -i '/# HTTPS server for file.example.com/{n;:a;/# }/!{s/^    # /    /;n;ba}}' /etc/nginx/nginx.conf
         
         if nginx -t && systemctl reload nginx; then
             touch "/etc/nginx/.https_enabled"
@@ -64,14 +64,14 @@ if [[ "$RENEWED_DOMAINS" == *"file.qinsuda.xyz"* ]]; then
         log "证书自动续期并上传完成 - $(date)"
         
         # 可以在这里添加其他通知方式，如邮件、钉钉等
-        # curl -X POST "your_notification_webhook" -d "file.qinsuda.xyz证书已自动续期并上传到七牛云"
+        # curl -X POST "your_notification_webhook" -d "file.example.com证书已自动续期并上传到七牛云"
         curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=2a592fdb-0de0-408f-86b0-b761c549057b' \
         -H 'Content-Type: application/json' \
         -d '
         {
                 "msgtype": "text",
                 "text": {
-                    "content": "file.qinsuda.xyz证书已自动续期并上传到七牛云"
+                    "content": "file.example.com证书已自动续期并上传到七牛云"
                 }
         }'
         # 清理临时DNS记录提醒（如果使用DNS验证）
@@ -85,7 +85,7 @@ if [[ "$RENEWED_DOMAINS" == *"file.qinsuda.xyz"* ]]; then
         exit 1
     fi
 else
-    log "跳过: 不是file.qinsuda.xyz域名的证书续期"
+    log "跳过: 不是file.example.com域名的证书续期"
 fi
 
 log "========== Certbot Deploy Hook 结束 ==========" 

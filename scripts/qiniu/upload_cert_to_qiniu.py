@@ -29,12 +29,12 @@ logger = logging.getLogger(__name__)
 # 七牛云配置
 QINIU_ACCESS_KEY = os.getenv("QINIU_ACCESS_KEY")
 QINIU_SECRET_KEY = os.getenv("QINIU_SECRET_KEY") 
-QINIU_CERT_NAME = "file-qinsuda-xyz-auto"  # 证书在七牛云显示的名称
-QINIU_CDN_DOMAIN = "file.qinsuda.xyz"      # 需要更新证书的CDN域名
+QINIU_CERT_NAME = "file-example-com-auto"  # 证书在七牛云显示的名称
+QINIU_CDN_DOMAIN = "file.example.com"      # 需要更新证书的CDN域名
 
 # Let's Encrypt 证书路径
-CERT_PATH = "/etc/letsencrypt/live/file.qinsuda.xyz/fullchain.pem"
-PRIVATE_KEY_PATH = "/etc/letsencrypt/live/file.qinsuda.xyz/privkey.pem"
+CERT_PATH = "/etc/letsencrypt/live/file.example.com/fullchain.pem"
+PRIVATE_KEY_PATH = "/etc/letsencrypt/live/file.example.com/privkey.pem"
 
 class QiniuCertManager:
     def __init__(self, access_key, secret_key):

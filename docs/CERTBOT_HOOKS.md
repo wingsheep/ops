@@ -101,7 +101,7 @@
 ```bash
 /etc/letsencrypt/renewal-hooks/deploy/upload-to-qiniu.sh
 ```
-- 检查续期的域名是否为`file.qinsuda.xyz`
+- 检查续期的域名是否为`file.example.com`
 - 加载七牛云环境变量
 - 调用Python脚本上传证书
 - 发送成功通知
@@ -129,7 +129,7 @@
 certbot renew --dry-run
 
 # 手动触发hooks测试
-RENEWED_DOMAINS="file.qinsuda.xyz" RENEWED_LINEAGE="/etc/letsencrypt/live/file.qinsuda.xyz" /etc/letsencrypt/renewal-hooks/deploy/upload-to-qiniu.sh
+RENEWED_DOMAINS="file.example.com" RENEWED_LINEAGE="/etc/letsencrypt/live/file.example.com" /etc/letsencrypt/renewal-hooks/deploy/upload-to-qiniu.sh
 ```
 
 ### 验证定时任务
@@ -147,7 +147,7 @@ tail -f /var/log/cron
 certbot certificates
 
 # 检查特定证书
-openssl x509 -in /etc/letsencrypt/live/file.qinsuda.xyz/fullchain.pem -noout -dates
+openssl x509 -in /etc/letsencrypt/live/file.example.com/fullchain.pem -noout -dates
 ```
 
 ## ⚡ 优势总结

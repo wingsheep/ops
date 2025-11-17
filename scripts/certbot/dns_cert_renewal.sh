@@ -2,7 +2,7 @@
 # DNS验证方式获取Let's Encrypt证书
 # 适用于域名已经解析到CDN的情况
 
-DOMAIN="file.qinsuda.xyz"
+DOMAIN="file.example.com"
 EMAIL="1306750238@qq.com"
 LOG_FILE="/var/log/nginx/dns_cert_renewal.log"
 
@@ -42,7 +42,7 @@ main() {
         # 启用HTTPS配置
         if [ ! -f "/etc/nginx/.https_enabled" ]; then
             log "启用HTTPS配置..."
-            sed -i '/# HTTPS server for file.qinsuda.xyz/,/# }/s/^    # /    /' /etc/nginx/nginx.conf
+            sed -i '/# HTTPS server for file.example.com/,/# }/s/^    # /    /' /etc/nginx/nginx.conf
             
             if nginx -t && systemctl reload nginx; then
                 touch "/etc/nginx/.https_enabled"

@@ -70,7 +70,7 @@ echo 'export QINIU_SECRET_KEY="your_secret"' >> /etc/environment
 ### 3. 首次运行
 
 ```bash
-# 确保file.qinsuda.xyz域名已解析到服务器
+# 确保file.example.com域名已解析到服务器
 # 执行自动化脚本
 ./auto_cert_renewal.sh
 ```
@@ -118,10 +118,10 @@ crontab -e
 python3 upload_cert_to_qiniu.py
 
 # 只获取Let's Encrypt证书
-certbot certonly --webroot -w /usr/share/nginx/html -d file.qinsuda.xyz
+certbot certonly --webroot -w /usr/share/nginx/html -d file.example.com
 
 # 检查证书有效期
-openssl x509 -in /etc/letsencrypt/live/file.qinsuda.xyz/fullchain.pem -noout -dates
+openssl x509 -in /etc/letsencrypt/live/file.example.com/fullchain.pem -noout -dates
 ```
 
 ## 日志和监控
@@ -149,7 +149,7 @@ certbot renew --dry-run
 1. **域名解析问题**
    ```bash
    # 检查域名解析
-   nslookup file.qinsuda.xyz
+   nslookup file.example.com
    ```
 
 2. **nginx配置问题**
@@ -167,7 +167,7 @@ certbot renew --dry-run
    ls -la /usr/share/nginx/html/.well-known/
    
    # 手动测试验证
-   certbot certonly --webroot -w /usr/share/nginx/html -d file.qinsuda.xyz --dry-run
+   certbot certonly --webroot -w /usr/share/nginx/html -d file.example.com --dry-run
    ```
 
 4. **七牛云API调用失败**

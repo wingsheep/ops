@@ -108,7 +108,7 @@ certbot renew --dry-run
 certbot renew --force-renewal -v
 
 # 检查指定域名证书到期时间
-DOMAIN=file.qinsuda.xyz
+DOMAIN=file.example.com
 openssl x509 -in /etc/letsencrypt/live/$DOMAIN/fullchain.pem -noout -dates
 
 # 查看最新日志

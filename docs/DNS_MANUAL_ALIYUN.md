@@ -17,7 +17,7 @@ certbot certonly \
     --email 1306750238@qq.com \
     --agree-tos \
     --manual-public-ip-logging-ok \
-    -d file.qinsuda.xyz
+    -d file.example.com
 ```
 
 ## 📋 DNS验证流程
@@ -60,7 +60,7 @@ certbot certonly \
 4. 验证证书获取成功：
    ```bash
    certbot certificates
-   ls -la /etc/letsencrypt/live/file.qinsuda.xyz/
+   ls -la /etc/letsencrypt/live/file.example.com/
    ```
 
 ### 自动续期配置
@@ -102,10 +102,10 @@ crontab 配置示例：
 #### DNS记录不生效
 ```bash
 # 检查DNS记录
-dig +short TXT "_acme-challenge.file.qinsuda.xyz"
+dig +short TXT "_acme-challenge.file.example.com"
 
 # 使用不同DNS服务器查询
-dig @8.8.8.8 +short TXT "_acme-challenge.file.qinsuda.xyz"
+dig @8.8.8.8 +short TXT "_acme-challenge.file.example.com"
 ```
 
 #### Aliyun CLI 权限错误
@@ -118,7 +118,7 @@ aliyun --profile certbot alidns DescribeDomains --PageSize 1
 #### 证书获取失败
 ```bash
 # 查看详细日志
-certbot certonly --manual --preferred-challenges=dns -d file.qinsuda.xyz --dry-run -v
+certbot certonly --manual --preferred-challenges=dns -d file.example.com --dry-run -v
 
 # 检查防火墙和网络连接
 curl -I https://acme-v02.api.letsencrypt.org/directory

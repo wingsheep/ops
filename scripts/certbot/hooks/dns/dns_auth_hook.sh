@@ -90,8 +90,8 @@ done <<< "$ACCOUNT_DOMAINS"
 
 if [[ -z "$API_DOMAIN" ]]; then
   # 安全兜底（按你的实际根域名修改）
-  # 你当前的域名托管在 AliDNS：qinsuda.xyz
-  API_DOMAIN="qinsuda.xyz"
+  # 你当前的域名托管在 AliDNS：example.com
+  API_DOMAIN="example.com"
   log "未匹配到托管域，使用兜底 API_DOMAIN=$API_DOMAIN"
 fi
 

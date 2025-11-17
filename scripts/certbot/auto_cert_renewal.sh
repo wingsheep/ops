@@ -4,7 +4,7 @@
 
 set -e
 
-DOMAIN="file.qinsuda.xyz"
+DOMAIN="file.example.com"
 LOG_FILE="/var/log/nginx/cert_renewal.log"
 # 安装后的脚本目录（保持与安装脚本一致）
 SCRIPT_DIR="/etc/nginx/cert-automation"
@@ -72,7 +72,7 @@ enable_https() {
     # 检查证书文件是否存在
     if [ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
         # 取消注释HTTPS服务器配置
-        sed -i '/# HTTPS server for file.qinsuda.xyz/,/# }/s/^    # /    /' /etc/nginx/nginx.conf
+        sed -i '/# HTTPS server for file.example.com/,/# }/s/^    # /    /' /etc/nginx/nginx.conf
         
         if check_nginx_config; then
             reload_nginx
@@ -81,7 +81,7 @@ enable_https() {
         else
             log "HTTPS配置启用失败，回滚..."
             # 回滚配置
-            sed -i '/# HTTPS server for file.qinsuda.xyz/,/# }/s/^    /    # /' /etc/nginx/nginx.conf
+            sed -i '/# HTTPS server for file.example.com/,/# }/s/^    /    # /' /etc/nginx/nginx.conf
             return 1
         fi
     else

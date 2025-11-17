@@ -45,7 +45,7 @@ echo ""
 echo "🌍 域名解析检查"
 echo "=============="
 
-DOMAIN="file.qinsuda.xyz"
+DOMAIN="file.example.com"
 RESOLVED_IP=$(ping -c 1 "$DOMAIN" 2>/dev/null | grep PING | sed -E 's/^[^(]+\(([^)]+)\).*$/\1/')
 
 if [ -n "$RESOLVED_IP" ]; then
@@ -59,7 +59,7 @@ echo ""
 echo "🎯 建议操作"
 echo "=========="
 echo "1. 运行 DNS 验证获取证书: ./dns_cert_renewal.sh"
-echo "2. 或使用手动命令: certbot certonly --manual --preferred-challenges=dns -d file.qinsuda.xyz"
+echo "2. 或使用手动命令: certbot certonly --manual --preferred-challenges=dns -d file.example.com"
 
 echo ""
 echo "🎉 配置检查完成！" 
