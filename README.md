@@ -85,6 +85,59 @@ sudo aliyun configure set --profile certbot \
 
 注意：请将 `<AK>/<SK>` 替换为具有 AliDNS 解析权限的子账号密钥。
 
+## 功能特性
+
+### 🔐 证书自动续期
+- 支持 HTTP-01 和 DNS-01 两种验证方式
+- 自动备份现有证书（保留最新 5 个）
+- 续期成功后自动重载 nginx
+
+### ☁️ 七牛云 CDN 集成
+- 续期后自动上传证书到七牛云
+- 自动更新 CDN 域名证书配置
+- 自动清理旧证书
+
+### 📱 企业微信通知
+续期完成后发送 Markdown 格式的统一通知，包含：
+- 所有证书的状态和有效期
+- nginx 重载状态
+- 七牛云上传状态
+
+通知示例：
+```
+🔐 SSL证书续期完成
+
+服务器: your-server
+时间: 2026-01-27 15:45:00
+
+📋 证书状态
+🟢 file.qinsuda.xyz - 到期: 2026-04-27 (89天)
+🟢 qinsuda.xyz - 到期: 2026-04-27 (89天)
+
+⚙️ 服务状态
+nginx 重载: 成功
+七牛云 CDN: ✅ 已上传
+```
+
+### 🔧 证书验证增强
+- 使用 `openssl` 直接读取证书文件，避免 certbot 索引缓存问题
+- 自动刷新 certbot 符号链接
+- 证书状态采用颜色标识（🟢 >30天 / 🟡 7-30天 / 🔴 <7天）
+
+## 消息通知配置
+
+在 `qiniu_env.sh` 中配置企业微信机器人：
+
+```bash
+# 企业微信机器人 Webhook
+export WECOM_WEBHOOK="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=your_key_here"
+
+# 需要上传到七牛云的域名列表（空格分隔）
+export QINIU_DOMAINS="file.example.com cdn.example.com"
+```
+
+获取 Webhook：在企业微信群中添加"群机器人"，复制 Webhook 地址。
+
 ## 日志位置
 - 安装：`/var/log/nginx/install.log`
 - 续期：`/var/log/nginx/cert_renewal.log`
@@ -142,3 +195,14 @@ crontab -l
 - 仅整理仓库目录，运行时路径保持为 `/etc/nginx/cert-automation`，避免影响已部署环境。
 - 修正了 `scripts/certbot/auto_cert_renewal.sh` 中的安装目录变量，默认从 `qiniu_env.sh` 加载密钥。
 - 详细指引见 `docs/`。
+
+## 更新日志
+
+### 2026-01-27
+- **新增**：企业微信 Markdown 格式统一通知
+- **新增**：证书状态颜色标识（🟢🟡🔴）
+- **优化**：使用 `openssl` 直接验证证书，避免 certbot 缓存问题
+- **优化**：Post hook 中自动刷新 certbot 符号链接
+- **优化**：配置外部化，webhook 和域名列表可在 `qiniu_env.sh` 中配置
+- **修复**：deploy hook 失败时发送错误通知
+
